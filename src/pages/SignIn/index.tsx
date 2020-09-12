@@ -1,5 +1,5 @@
 import React, {useCallback, useRef} from "react";
-import {Image, KeyboardAvoidingView, Platform, ScrollView, View} from "react-native";
+import {Image, KeyboardAvoidingView, Platform, ScrollView, TextInput, View} from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import {useNavigation} from "@react-navigation/native";
 import {Form} from "@unform/mobile";
@@ -13,6 +13,7 @@ import {Container, Title, ForgotPassword, ForgotPasswordText, CreateAccountButto
 const SignIn: React.FC = () => {
     const navigation = useNavigation();
     const formRef = useRef<FormHandles>(null);
+    const passwordInputRef = useRef<TextInput>(null);
 
     const handleSubmit = useCallback((data: object) => {
         console.log(data);
@@ -36,10 +37,31 @@ const SignIn: React.FC = () => {
                        </View>
 
                      <Form ref={formRef} onSubmit={handleSubmit}>
-                         <Input name="email" icon="mail" placeholder="E-mail" />
-                         <Input name="password" icon="lock" placeholder="Senha" />
+                         <Input
+                             autoCorrect={false}
+                             autoCapitalize="none"
+                             keyboardType="email-address"
+                             name="email"
+                             icon="mail"
+                             placeholder="E-mail"
+                             returnKeyType="next"
+                             blurOnSubmit={false}
+                             onSubmitEditing={() => {
+                                passwordInputRef.current?.focus();
+                             }}
+                         />
+                         <Input
+                             ref={passwordInputRef}
+                             name="password"
+                             icon="lock"
+                             placeholder="Senha"
+                             textContentType="newPassword"
+                             secureTextEntry
+                             onSubmitEditing={() => {
+                                 formRef.current?.submitForm();
+                             }}
+                         />
                      </Form>
-                       {/* Putting the button inside form break its style */}
                        <Button onPress={() => {
                            formRef.current?.submitForm();
                        }}>Entrar</Button>
