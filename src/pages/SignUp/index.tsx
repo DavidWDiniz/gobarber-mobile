@@ -10,6 +10,7 @@ import logoImg from "../../assets/logo.png";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import getValidationErrors from "../../utils/getValidationErrors";
+import api from "../../services/api";
 import {Container, Title, BackToSignIn, BackToSignText} from "./styles";
 
 interface SignUpFormData {
@@ -35,9 +36,9 @@ const SignUp: React.FC = () => {
             });
             await schema.validate(data, {abortEarly: false});
 
-            // await api.post("/users", data);
-            //
-            // history.push("/");
+            await api.post("/users", data);
+            Alert.alert("Cadastro realizado com sucesso!", "Voçê já pode realizar login na aplicação.");
+            navigation.goBack();
 
         } catch (err) {
             if (err instanceof Yup.ValidationError) {
